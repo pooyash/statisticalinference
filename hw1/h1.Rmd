@@ -1,0 +1,164 @@
+#6-a
+```{r}
+library(ggplot2)
+mpg
+
+ggplot(mpg, aes(x=hwy)) +
+  geom_histogram(aes(y=..density..), color="black", fill="darkgrey", binwidth=.75) +
+  geom_density(col = "red")
+```
+#6-b
+```{r}
+data(mpg)
+attach(mpg)
+
+library(ggplot2)
+
+
+ggplot(data = mpg, aes(x = fl  )) +
+  geom_bar(color="blue", fill="purple") +
+  coord_flip()
+
+```
+#6-c
+```{r}
+
+library(ggplot2)
+ ggplot(mpg, aes(x=class, y=hwy, fill = class)) + geom_boxplot()
+```
+
+#6-d
+```{r}
+library(ggplot2)
+library(ggmosaic)
+library(dplyr)
+library(magrittr) 
+ 
+data = mpg
+p <- ggplot(data = mpg) + 
+   geom_mosaic(aes(x = product(drv,fl), fill=drv)) +  
+   labs(title='6-d ')  
+ 
+
+
+pr1 <- data.frame(table(mpg[mpg$fl == 'r',]$drv))
+pr1 <- pr1$Freq/sum(pr1$Freq)
+pr1 <- as.integer(pr1*100)
+
+pr2 <- data.frame(table(mpg[mpg$fl == 'p',]$drv))
+pr2 <- pr2$Freq/sum(pr2$Freq)
+pr2 <- as.integer(pr2*100)
+
+pr3 <- data.frame(table(mpg[mpg$fl == 'e',]$drv))
+pr3 <- pr3$Freq/sum(pr3$Freq)
+pr3 <- as.integer(pr3*100)
+
+pr4 <- data.frame(table(mpg[mpg$fl == 'd',]$drv))
+pr4 <- pr4$Freq/sum(pr4$Freq)
+pr4 <- as.integer(pr4*100)
+
+pr5 <- data.frame(table(mpg[mpg$fl == 'c',]$drv))
+pr5 <- pr5$Freq/sum(pr5$Freq)
+pr5 <- as.integer(pr5*100)
+
+
+ p + 
+   geom_text ( 
+   # extract rectangle centers, add labels 
+   data =  
+     # 'layer_data(p, 1)' extracts data frame with data from 1st layer of p 
+     layer_data(p, 1) %>%  
+     select(xmin:ymax) %>%  
+     mutate(m.x = (xmin + xmax)/2, m.y =  (ymin + ymax)/2) %>%  
+     select(m.x, m.y)  %>%  
+     mutate(string = c(letters[1:15])), 
+   # set label locations to centers, set labels to strings 
+   aes(x = m.x, y = m.y, label = c(pr5[1], pr5[2],pr5[3], pr4[1],pr4[2], pr4[3],pr3[1], pr3[2],pr3[3], pr2[1],pr2[2], pr2[3],pr1[1],pr1[2],pr1[3])))
+
+
+
+```
+#6-e
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x=cty, y=hwy) ) +
+  stat_density_2d(aes(fill = ..level..), geom = "polygon", colour="yellow")
+
+```
+#7-a
+```{r}
+library(ggplot2)
+ggplot(mtcars, aes(x=wt, y=mpg, color=as.factor(cyl))) +
+  geom_point(shape = 15,size=2) 
+  
+```
+#7-b
+```{r}
+library(corrplot)
+D=cor(mtcars[1:6])
+corrplot(D, method="number", type="lower")
+
+```
+#7-c
+```{r}
+carburetors = table(mtcars$cyl)
+View(carburetors)
+percent = round(100*carburetors/sum(carburetors), 0)
+pielabels = paste(percent, "%", sep="")
+#R code to create the Pie Chart
+pie(carburetors,col = rainbow(length(carburetors)),
+    labels = percent , main = '', cex = 1)
+legend("topright", c("4cylinder","6cylinder","8cylinder"), 
+       cex=1.2, fill=  rainbow(length(carburetors)))
+
+```
+#7-d
+```{r}
+library(ggplot2)
+mpg$class = as.factor(mpg$class)
+head(mpg)
+
+ ggplot(mpg, aes(x=class, y=hwy, fill=class)) + 
+  geom_violin() +
+  stat_summary(fun = "median", geom = "crossbar", width = 0.8, colour = "light blue", size = 0.4) 
+```
+#8
+```{r}
+library(ggpubr)
+library(ggplot2)
+
+
+
+x1 = rexp(50,rate= 1)
+x2 = rnorm(50,mean = 0 , sd = 1)
+x3 = rcauchy(50,location = 0, scale = 0.5 ) 
+x4 = runif(50, 0, 1)
+
+
+
+
+#p-A
+x1 = (x1 - mean(x1))/sd(x1)
+x2 = (x2 - mean(x2))/sd(x2)
+x3 = (x3 - mean(x3))/sd(x3)
+x4 = (x4 - mean(x4))/sd(x4)
+#plot
+par(mfrow=c(2,2))
+qqnorm(x1, pch = 0, frame = TRUE);qqline(x1,col ='chartreuse4',lwd = 2)
+qqnorm(x2, pch = 1, frame = TRUE);qqline(x2,col ='chartreuse4',lwd = 2)
+qqnorm(x3, pch = 2, frame = TRUE);qqline(x3,col ='chartreuse4',lwd = 2)
+qqnorm(x4, pch = 3, frame = TRUE);qqline(x4,col ='chartreuse4',lwd = 2)
+
+
+
+
+
+#p-C
+xs =  runif(200, 0, 1)
+xa = sample(xs, size = 100, replace = FALSE)
+xb = sample(xs, size = 100, replace = FALSE)
+qqplot(xa, xb,   main = expression("Q-Q plot for two same distribution"));
+qqline(xs,distribution = qunif, col = "navyblue")
+
+```
+
