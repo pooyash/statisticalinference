@@ -1,0 +1,95 @@
+#part-a
+```{r}
+df = data.frame(position = c("UI Developers","Back-end Developer", "management", "HR","HSE"), population = c(8, 12, 4, 3, 3 ))
+print(df)
+```
+#part-b
+```{r}
+barplot(df$population, names.arg=df$position, xlab="position types", ylab="population",col.lab = "darkblue",col.axis = "blue", main="distributions of employees", col.main="darkgreen", col ="maroon", cex.names = 0.8)
+```
+#part-c
+```{r}
+UI_Developers = c(75000, 25000, 48000, 42000, 35200, 45000, 23000, 45500)
+Back_end_Developers = c( 20000, 80000, 36000, 46300, 41000, 43000, 22000 , 37000, 39000, 43500, 69000, 5000)
+Management = c (80000, 67000, 56000, 82000)
+HR = c(45000, 39000, 30000)
+HSE = c(12000, 25000, 31500)
+z = c("UI_Developers", "Back_end_Developers", "Management", "HR","HSE")
+dataList = lapply(z, get, envir=environment())
+names(dataList) = z
+boxplot(dataList, main="Salary of positions", xlab="Position types", ylab="salary", col.lab = "darkblue", col.axis = "blue", col.main="darkgreen", col ="violet", cex.axis = 0.70)
+```
+#part-d-quartile and IQR
+```{r}
+d1 = summary(UI_Developers)
+d2 = summary(Back_end_Developers)
+d3 = summary(Management)
+d4 = summary(HR)
+d5 = summary(HSE)
+D = data.frame(positions = z , First_QRT = c(d1[2], d2[2], d3[2], d4[2], d5[2]), Third_QRT = c(d1[5], d2[5], d3[5], d4[5], d5[5]), IQR = c(IQR(UI_Developers), IQR(Back_end_Developers), IQR(Management) , IQR(HR), IQR(HSE)))
+print(D)
+```
+#part-d-outliers
+```{r}
+outlierbuild = function(p){
+l = median(p) - 3 * mad(p, constant = 1)
+u = median(p) + 3 * mad(p, constant = 1)
+outlier = which(p < l | p > u)
+print (p[outlier])
+}
+outlierbuild(UI_Developers)
+outlierbuild(Back_end_Developers)
+outlierbuild(Management)
+outlierbuild(HR)
+outlierbuild(HSE)
+```
+#part-e-histogram and density
+```{r}
+histdensity <- function(s,p){
+  
+d = summary(s)
+hist(s, col="limegreen", prob = T, xlab = "Salary", main =sprintf( " histogram and the density graph of %s" , p), ylim = c(0, 2*max(max(unlist(density(s)["y"])))))
+lines(density(s), lwd = 3, col = "midnightblue")
+abline(v = c(d[3], d[4]), col=c("yellow","orange"), lwd=3, lty=c(8,3))
+legend("topleft", legend=c("density", "median","mean"), col=c("midnightblue", "yellow", "orange"), lty=1:10, box.lty=3)
+}
+histdensity(UI_Developers,"UI_Developers")
+histdensity(Back_end_Developers,"Back_end_Developers")
+histdensity(Management,"Management")
+histdensity(HR,"HR")
+histdensity(HSE,"HSE")
+```
+#part-e-Skewness
+```{r}
+library(e1071)
+print(skewness(UI_Developers))
+print(skewness(Back_end_Developers))
+print(skewness(Management))
+print(skewness(HR))
+print(skewness(HSE))
+```
+#part-f
+```{r}
+totsal = c(UI_Developers, Back_end_Developers, Management, HR,HSE)
+very_high = which(totsal>=50000)
+high = which(totsal<50000 & totsal>=40000)
+middle = which(totsal<40000 & totsal>=30000)
+low = which(totsal<30000 & totsal>=20000)
+very_low = which(totsal<20000)
+p = c(length(very_high),length(high),length(middle),length(low),length(very_low))
+percent = round(100*p/sum(p), 0)
+t = c("very high","high","middle","low","very low")
+l = paste(t,"=",percent,"%")
+par(mar = c(5, 1, 8, 3) + 0.2)
+pie(p, labels = l, main = " pie chart",col = rainbow(length(p)))
+legend("bottomleft",l, fill = rainbow(length(p)))
+```
+#part-g
+```{r}
+d = summary(Back_end_Developers)
+print(d)
+print(var(Back_end_Developers))
+print(sd(Back_end_Developers))
+```
+
+

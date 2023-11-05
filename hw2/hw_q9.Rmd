@@ -1,0 +1,62 @@
+#part-a
+```{r}
+numostd = c(25,30,35,20,25)
+classes = c("class1","class2","class3","class4","class5")
+df = data.frame(classes, numostd)
+print(df)
+```
+#part-b
+```{r}
+barplot(numostd, names.arg=classes, xlab="class", ylab="number of students", col.lab = "red", col.axis = "red", main="distribution of the number of students", col.main="darkgreen", col ="chocolate" )
+```
+#part-c
+```{r}
+library(ggplot2)
+top_student = c(3,5,2,1,4)
+df$top_student = top_student
+print (df)
+ggplot(df,aes(x=numostd, y= top_student,fill = classes)) + geom_point( aes(color = classes),shape = 8, size = 3) 
+```
+#part-e-boxplot
+```{r}
+g4 = c(19.5, 16.75, 13.5, 16.25, 5, 12.5, 15.5, 15, 11, 16.5, 12.75, 15.5, 12.75, 9.75, 11, 14.5, 16.75, 11.5, 17, 18.25)
+boxplot(g4, main="GPA of class4")
+```
+#part-e-quartiles(exact values)
+```{r}
+d = summary(g4)
+print(d)
+```
+#part-e-outliers
+```{r}
+l = median(g4) - 3 * mad(g4, constant = 1)
+u = median(g4) + 3 * mad(g4, constant = 1)
+outlier = which(g4 < l | g4 > u)
+print (g4[outlier])
+```
+#part-f-histogram and density
+```{r}
+hist(g4, col="skyblue", prob = TRUE, xlab = "grades",main = "histogram and the density of class 4 GPA")
+lines(density(g4), lwd = 3, col = "navy")
+abline(v = c(d[3],d[4]), col=c("orange","pink"), lwd=3, lty=c(8,3))
+legend("topleft", legend=c("density", "median","mean"), col=c("navy", "orange","pink"), lty=1:10, box.lty=3)
+```
+#part-f-skewness
+```{r}
+library(e1071)
+skewness(g4)
+```
+#part-g
+```{r}
+A = which(g4>=18)
+B = which(g4<18 & g4>=15)
+C = which(g4<15 & g4>=13)
+D = which(g4<13)
+p = c(length(A),length(B),length(C),length(D))
+percent = round(100*p/sum(p), 0)
+t = c("A","B","C","D")
+l = paste(t,"=",percent,"%")
+pie(p, labels = l, main = " frequancy of grades in four categories",col = rainbow(length(p)))
+legend("topleft",t, fill = rainbow(length(p)))
+```
+

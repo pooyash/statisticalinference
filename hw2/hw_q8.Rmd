@@ -1,0 +1,44 @@
+#part-a
+```{r}
+scores = c(57,66,72,78,79,79,81,81,82,83,84,87,88,88,89,90,91,92,94,95)
+```
+#part-b
+```{r}
+getmode = function(v) {
+   uniqv = unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+d = summary(scores)
+print(d)
+#Mode
+print(getmode(scores))
+#variance
+print(var(scores))
+#standard deviation
+print(sd(scores))
+```
+#part-c
+```{r}
+l = median(scores) - 3 * mad(scores, constant = 1)
+u = median(scores) + 3 * mad(scores, constant = 1)
+outlier = which(scores < l | scores > u)
+print (scores[outlier])
+```
+#part-d
+```{r}
+boxplot(scores)
+title("boxplot of the scores", ylab = "scores" , xlab = "boxplot")
+```
+#part-e-histogram and the density
+```{r}
+hist(scores, col="seagreen", prob = T, xlab = "scores", main = "histogram and the density of scores")
+lines(density(scores), lwd = 4, col = "black")
+abline(v = c(d[3], d[4]), col=c("gold","royalblue"), lwd=3, lty=c(8,3))
+legend("topleft", legend=c("density", "median", "mean"), col=c("black", "gold", "royalblue"), lty=1:10, box.lty=3)
+```
+#part-e-Skewness
+```{r}
+library(e1071)
+skewness(scores)
+```
+
