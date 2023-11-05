@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+sampler = function(density, p, n = 10000, q_std = 1, ...)
+  { #first time
+    t = numeric(n)
+    t[1] = p
+  
+  for (i in 2:n)
+    {
+      c = rnorm(1, mean = t[i - 1], sd = q_std)
+      a = density(c, ...) / density(t[i - 1], ...)
+      b = runif(1)
+      if (b < a) 
+        t[i] = c
+      else 
+        t[i] = t[i - 1]
+    }
+  
+  return(t)
+}
+#GAMMA DISTRIBUTION
+s = 6
+r = 15
+cample = tibble(t = sampler(dgamma, n= 10^4, p = 1, shape =s, rate =r, q_std=1))
+#comparison of estimation(violet) with the original function of gamma distribution
+ggplot(cample, aes(x = t)) + geom_density(color = "navy") + stat_function(fun = dgamma, args = list(shape = s, rate = r),color = "violet") + labs(title=("Metropolis-Hastings Estimation of Gamma func and gamma distribution"))
+```

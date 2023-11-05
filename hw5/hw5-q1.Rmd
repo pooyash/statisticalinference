@@ -1,0 +1,60 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+/C
+```{r}
+#for Binomial distribution for x(0,9)
+p = 0.3
+s = 19
+x = 0:s
+#likelihood
+likelihood = dbinom(x, n, p)
+df = data.frame(x=x, likelihood=likelihood)
+#plot likelihood or better representation
+# df = data.frame(x=x, likelihood=likelihood)
+# ggplot(data=df) + geom_line(aes(x=x, y=likelihood, colour="likelihod"))
+#uniform using rbiom a=b=1
+N = 30
+a = 1
+b = 1
+r = rbinom(N, s , p)
+range = seq(0, 1, 0.01)
+#building posterior
+alpha = a + sum(r)
+beta = n * N + b - sum(r)
+prior = dbeta(range, a, b)
+posterior = dbeta(range, alpha, beta)
+df = data.frame(theta=range, posterior=posterior, prior=prior)
+ggplot(data=df) + geom_line(aes(x=theta, y=posterior, colour="Posterior")) + geom_line(aes(x=theta, y=prior, colour="Uniform Prior"))+ labs(x="Theta", y="Density", title="Posterior vs Prior", subtitle=sprintf("α=%.1f, β=%.1f, N=%d, θ=%.1f", a, b, N, p)) 
+```
+
+//D
+```{r}
+library(ggplot2)
+# Binomial distribution for x(0,9)
+p = 0.4
+s = 100
+x = 0:s
+#likelihood
+likelihood = dbinom(x, s, p)
+# df = data.frame(x=x, likelihood=likelihood)
+# ggplot(data=df) + geom_line(aes(x=x, y=likelihood, colour="likelihod"))
+#beta distribution using binomial
+N = 30
+#beta coefficients
+a = 4
+b = 5
+r = rbinom(N, s , p)
+range = seq(0, 1, 0.01)
+#building posterior
+alpha = a + sum(r)
+beta = s * N + b - sum(r)
+prior = dbeta(range, a, b)
+posterior = dbeta(range, alpha, beta)
+# d = data.frame(theta=range, posterior=posterior, prior=prior)
+df = data.frame(theta=range, posterior=posterior, prior=prior,likelihood=likelihood)
+# ggplot(data=d) +  geom_line(aes(x=theta, y=posterior, colour="Posterior")) +  geom_line(aes(x=theta, y=prior, colour="Prior"))+  labs(x="Theta", y="Density", title="Posterior vs Prior", subtitle=sprintf("α=%.1f, β=%.1f, N=%d, θ=%.1f", a, b, N, p))
+ggplot(data=df) + geom_line(aes(x=theta, y=posterior, colour="Posterior")) + geom_line(aes(x=theta, y=prior, colour="Prior"))+ geom_line(aes(x=theta, y=likelihood, colour="likelihod")) + labs(x="Theta", y="Density", title="Posterior,Prior,likelihood graph", subtitle=sprintf("α=%.1f, β=%.1f, N=%d, θ=%.1f ", a, b, N, p))
+```

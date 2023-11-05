@@ -1,0 +1,42 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(reshape2)
+#question inputs + randomness
+n = 10
+choice = sample(0:1, n, replace=T)#,prob=c(0.5,0.5))
+outcome = sample(0:1, n, replace=T)#,prob=c(0.5,0.5))
+#p(h1)=0.5=p(h2)
+h1 = 0.5
+#update the prior belief to the number of steps(n=10)
+u = 1:n
+p1 = p2 = 0
+for (i in 1:n)
+  {
+  # probability of each roll
+  #  if outcomes =1 for mote than >= 4
+  if (outcome[i] == 1)
+    { # good dice
+      p1 = h1 * 0.75
+      # bad dice
+      p2 = (1-h1) * 0.5 
+      h1 = p1 / (p1 + p2)
+    }
+  else
+    {
+      p1 = h1 * 0.25
+      p2 = (1-h1) * 0.5
+      h1 = p1 / (p1 + p2)
+    }
+  #updates
+  u[i] = h1
+  p1 = p2 = 0
+}
+df = data.frame(H1=u, n=1:length(u), H2 = 1- u)
+mdat = melt(df, id.vars=c("n"), variable="options")
+ggplot(data=mdat, aes(x=n, y=value, fill=options)) + geom_bar(position="fill", stat="identity") + labs(title="Updates of H1 and H2 for 10 time", x="times", y="Probability")
+```
