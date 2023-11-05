@@ -1,0 +1,107 @@
+---
+title: "HW4"
+output: html_notebook
+---
+
+
+Q5)
+```{r}
+library(ggplot2)
+q5_data <- read.csv("NBA_stats.csv")
+```
+
+c)
+```{r}
+q5_data <- q5_data[!duplicated(q5_data$Player), ]
+library(stringr)
+pos <- str_split_fixed(q5_data$Pos, "-", 2)
+q5_data$Pos <- pos[1:dim(pos)[1]]
+```
+
+d)
+
+```{r}
+qplot(FGA, FG., data = q5_data)
+```
+
+e)
+```{r}
+lm1 <- lm(FG. ~ FGA, data = q5_data)
+summary(mod1)
+```
+
+```{r}
+qplot(FGA, FG., data = q5_data, main = "Scatter plot") + geom_smooth(method = "lm")
+```
+
+```{r}
+plot(lm1, which = c(1,2))
+```
+
+f)
+```{r}
+ggplot(q5_data, aes(x=Pos, y=FG., fill=Pos))+geom_boxplot(outlier.shape = 1)+ggtitle("Box plot of FG% for different Posisions")
+```
+
+```{r}
+ggplot(q5_data, aes(x=FGA, y=FG.))+geom_point(aes(color=factor(Pos)))
+```
+
+```{r}
+library(lme4)
+lme1 <- lmer(FG. ~ FGA + (1|Pos), data = q5_data)
+summary(lme1)
+```
+
+
+Q6)
+```{r}
+Y <- c(15, 1, 17, 28, 9, 9, 40, 6, 22, 33, 13, 14, 25, 26, 57, 17, 18, 19, 40, 21)
+X <- c(1:20)
+```
+
+a)
+```{r}
+skew <- sum((Y-mean(Y))^3)/length(Y)/sd(Y)^3
+kurtosis <- sum((Y-mean(Y))^4)/length(Y)/sd(Y)^4
+hist(Y, breaks = 10)
+```
+
+b)
+```{r}
+q6_data <- data.frame(X, Y)
+names(q6_data) <- c("X", "Y")
+d <- dgamma(X[1:10], shape = 2, scale = 1)
+gamma_dist <- data.frame(c(0.5, X[1:10]), c(0.08, round(d, 3)))
+names(gamma_dist) <- c("X", "Probs")
+```
+
+```{r}
+d_temp = c()
+for (sh in c(1, 2, 3, 4)){
+    d_temp <- c(d_temp, dgamma(X[1:10], shape = sh, scale = 1))
+    d_temp <- c(0.08, d_temp)
+}
+gamma_dist_temp <- data.frame(rep(c(0.5, X[1:10]), times=4), d_temp, rep(c(1,2,3,4), each=11))
+names(gamma_dist_temp) <- c("X", "Probs", "shape")
+```
+
+```{r}
+ggplot(gamma_dist_temp, aes(X, Probs))+geom_line(aes(color=factor(shape)))
+```
+
+```{r}
+d_temp = c()
+for (sc in c(0.5, 1, 2, 3)){
+    d_temp <- c(d_temp, dgamma(X[1:10], shape = 2, scale = sc))
+    d_temp <- c(0.08, d_temp)
+}
+gamma_dist_temp <- data.frame(rep(c(0.5, X[1:10]), times=4), d_temp, rep(c(1,2,3,4), each=11))
+names(gamma_dist_temp) <- c("X", "Probs", "scale")
+```
+
+```{r}
+ggplot(gamma_dist_temp, aes(X, Probs))+geom_line(aes(color=factor(scale)))
+```
+
+c)
