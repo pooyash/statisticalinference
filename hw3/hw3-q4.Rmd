@@ -1,0 +1,18 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+//showing and making the dataset
+```{r}
+library(ggplot2)
+df <- data.frame(JanMar = c(40.9,23.7),AprJun = c(30.6,25.9),JulSep = c(14.4,25.9),OctDec = c(13.6,24.9))
+print(df)
+```
+
+//test
+```{r}
+test = chisq.test(df)
+print(test)
+```
+

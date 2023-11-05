@@ -1,0 +1,13 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+//making and showing dataset
+```{r}
+d = data.frame(supporters_before = c(60,56,80,73,14,32),supporters_after = c(58,58,83,67,17,36))
+print(d)
+```
+//test
+```{r}
+t.test(d$supporters_before,d$supporters_after)
+```
